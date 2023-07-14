@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta charset="UTF-8">
+<ul class="nav nav-tabs" style="margin-top: 20px; position: sticky; top: 0; background-color: #2d3038;">
+    <li class="nav-item">
+        <a class="nav-link" href="/" style="color: #ffffff;">Главная страница</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled" href="/show_users">Работники</a>
+    </li>
+    {% if current_user.admin %}
+        <li class="nav-item">
+            <a class="nav-link disabled" href="/departments">Отделы</a>
+        </li>
+    {% endif %}
+    <li class="nav-item ml-auto">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="block" style="float: right; margin-left: 3px;">
+            {{ form.submit(type="submit", class="btn btn-success",
+                style="background: #009a63; border-color: #009a63;") }}
+            </div>
+            <div class="block" style="float: right;">
+            {{ form.name(class="form-control", type="search", placeholder="Поиск задачи") }}
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            </div>
+        </form>
+    </li>
+</ul>
+<h1 align="center" style="margin-top: 10px; margin-bottom: 15px; color: #ffffff;">Список задач</h1>
+<div class="table_container">
+    <table class="my_table" width="75%" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);">
+        <tr class="my_row">
+            <td class="title" width="70%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Задача</td>
+            <td class="title" width="30%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Статус</td>
+            {% if current_user.id in team_leaders or current_user.id in collaborators or current_user.admin %}
+            <td class="title" width="10%" style="background-color: #dddddd; padding: 5px;"></td>
+            {% if current_user.id in team_leaders or current_user.admin %}
+            <td class="title" width="10%" style="background-color: #dddddd; padding: 5px;"></td>
+            {% endif %}
+            {% endif %}
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            <td class="title" style="background-color: #eeeeff; text-align:
+            center; font-size: 14pt; padding: 5px;">{{ task.name }}</td>
+            {% if task.is_completed %}
+            <td class="ordinary" style="background-color: #eeffee; text-align: center;
+            font-size: 14pt; padding: 5px;">Завершена</td>
+            {% else %}
+            <td class="ordinary" style="background-color: #ffeeff; text-align: center;
+            font-size: 14pt; padding: 5px;">В процессе</td>
+            {% endif %}
+            {% if current_user.id in team_leaders or current_user.id in collaborators or current_user.admin %}
+            <td class="title" style="background-color: #eeeeff; padding: 5px;">
+                <a href="/edit_task/{{ task.id }}" class="btn btn-warning" style="color: white;
+                background: #f4a900; border-color: #f4a900;">Изменить</a>
+            </td>
+            {% if current_user.id in team_leaders or current_user.admin %}
+            <td class="title" style="background-color: #eeeeff; padding: 5px;">
+                <a href="/del_task/{{ task.id }}" class="btn btn-danger" style="color: white;
+                background: #c41e3a; border-color: #c41e3a;">Удалить</a>
+            </td>
+            {% endif %}
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% if current_user.id in team_leaders or current_user.id in collaborators or current_user.admin %}
+    <a href="/addtask/{{ job.id }}" class="btn btn-info" style="margin-top: 10px; margin-bottom: 10px;
+    background: #3b83bd; border-color: #3b83bd;">Добавить задачу</a>
+    {% endif %}
+</div>
+{% endblock %}

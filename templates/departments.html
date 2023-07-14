@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta charset="UTF-8">
+<ul class="nav nav-tabs" style="margin-top: 20px; position: sticky; top: 0; background-color: #2d3038;">
+    <li class="nav-item">
+        <a class="nav-link" href="/" style="color: #ffffff;">Главная страница</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/show_users" style="color: #ffffff;">Работники</a>
+    </li>
+    {% if current_user.admin %}
+        <li class="nav-item">
+            <a class="nav-link active" href="/departments" style="background-color: #ffffff; color: #2d3038;">Отделы</a>
+        </li>
+    {% endif %}
+    <li class="nav-item ml-auto">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="block" style="float: right; margin-left: 3px;">
+            {{ form.submit(type="submit", class="btn btn-success",
+                style="background: #009a63; border-color: #009a63;") }}
+            </div>
+            <div class="block" style="float: right;">
+            {{ form.name(class="form-control", type="search", placeholder="Поиск отдела") }}
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            </div>
+        </form>
+    </li>
+</ul>
+<h1 align="center" style="margin-top: 10px; margin-bottom: 15px; color: #ffffff;">Отделы</h1>
+<a href="/add_department" class="btn btn-info" style="margin-top: 5px; margin-bottom: 10px;
+background: #3b83bd; border-color: #3b83bd;">
+    Добавить отдел</a>
+<div class="table_container">
+    <table class="my_table" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);">
+        <tr class="my_row">
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">ID</td>
+            <td class="title" width="90%" style="background-color: #dddddd;
+            font-size: 14pt; padding: 5px;">Название</td>
+            <td class="title" width="10%" style="background-color: #dddddd; padding: 5px;"></td>
+        </tr>
+        {% for depart in departments %}
+        <tr>
+            <td class="title" style="background-color: #eeeeff; text-align:
+            center; font-size: 14pt; padding: 5px;">{{ depart.id }}</td>
+            <td class="title" style="background-color: #eeeeff;
+            font-size: 14pt; padding: 5px;">{{ depart.name }}</td>
+            <td class="title" style="background-color: #eeeeff; padding: 5px;">
+                <a href="/del_department/{{ depart.id }}" class="btn btn-danger" style="color: white;
+                background: #c41e3a; border-color: #c41e3a;">Удалить</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

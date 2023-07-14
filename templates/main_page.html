@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta charset="UTF-8">
+<ul class="nav nav-tabs" style="margin-top: 20px; position: sticky; top: 0; background-color: #2d3038;">
+    <li class="nav-item">
+        <a class="nav-link active" href="/" style="background-color: #ffffff; color: #2d3038;">Главная страница</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/show_users" style="color: #ffffff;">Работники</a>
+    </li>
+    {% if current_user.admin %}
+        <li class="nav-item">
+            <a class="nav-link" href="/departments" style="color: #ffffff;">Отделы</a>
+        </li>
+    {% endif %}
+    <li class="nav-item ml-auto">
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="block" style="float: right; margin-left: 3px;">
+            {{ form.submit(type="submit", class="btn btn-success",
+                style="background: #009a63; border-color: #009a63;") }}
+            </div>
+            <div class="block" style="float: right;">
+            {{ form.name(class="form-control", type="search", placeholder="Поиск проекта") }}
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+            </div>
+        </form>
+    </li>
+</ul>
+<h1 align="center" style="margin-top: 10px; color: #ffffff;">Проекты</h1>
+<a href="/addjob" class="btn btn-info"
+   style="margin-top: 10px; margin-bottom: 10px; background: #3b83bd; border-color: #3b83bd;">Добавить проект</a>
+{% for job in jobs %}
+<h4 style="color: #ffffff;">Проект # {{ job.id }}</h4>
+<div class="table_container">
+    <table class="my_table" style="box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);">
+        <tr class="my_row">
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Название</td>
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Описание</td>
+            {% if current_user.id in team_leaders_list[job.id] or current_user.id in collaborators_list[job.id]
+            or current_user.admin %}
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Задачи</td>
+            {% endif %}
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Кураторы</td>
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Работники</td>
+            <td class="title" width="10%" style="background-color: #dddddd; text-align:
+            center; font-size: 14pt; padding: 5px;">Статус</td>
+        </tr>
+        <tr class="my_row">
+            <td class="ordinary" style="background-color: #eeeeff; text-align: center;
+            font-size: 14pt; padding: 5px;">{{ job.name.capitalize() }}</td>
+            <td class="ordinary" style="background-color: #eeeeff; text-align: center;
+            font-size: 14pt; padding: 5px;">{{ job.description.capitalize() }}</td>
+            {% if current_user.id in team_leaders_list[job.id] or current_user.id in collaborators_list[job.id]
+            or current_user.admin %}
+            <td class="ordinary" style="background-color: #eeeeff; text-align: center;
+            font-size: 14pt; padding: 5px;"><a href="/show_tasks/{{ job.id }}">Список задач</a></td>
+            {% endif %}
+            <td class="ordinary" style="background-color: #eeeeff; text-align: center;
+            font-size: 14pt; padding: 5px;">{{ ', '.join(team_leaders[job.id]) }}</td>
+            <td class="ordinary" style="background-color: #eeeeff; text-align: center;
+            font-size: 14pt; padding: 5px;">{{ ', '.join(collaborators[job.id]) }}</td>
+            {% if job.is_finished %}
+            <td class="ordinary" style="background-color: #eeffee; text-align: center;
+            font-size: 14pt; padding: 5px;">Завершён</td>
+            {% else %}
+            <td class="ordinary" style="background-color: #ffeeff; text-align: center;
+            font-size: 14pt; padding: 5px;">В процессе</td>
+            {% endif %}
+        </tr>
+    </table>
+    {% if current_user.is_authenticated and (current_user.id in team_leaders_list[job.id] or current_user.admin) %}
+        <div>
+            <a href="/jobs/{{ job.id }}" class="btn btn-warning"
+               style="margin-top: 10px; background: #f4a900; border-color: #f4a900;">Изменить</a>
+            <a href="/job_delete/{{ job.id }}" class="btn btn-danger"
+               style="margin-top: 10px; background: #c41e3a; border-color: #c41e3a;">Удалить</a>
+        </div>
+    {% endif %}
+</div>
+<br>
+{% endfor %}
+
+{% endblock %}

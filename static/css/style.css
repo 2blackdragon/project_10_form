@@ -1,0 +1,12 @@
+.td.title {
+    background-color: "#dddddd";
+    align: "center";
+    font-size: 14pt;
+    padding: 5px;
+}
+.td.ordinary {
+    background-color: "#eeeeff";
+    align: "center";
+    font-size: 14pt;
+    padding: 5px;
+}

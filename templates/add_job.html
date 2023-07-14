@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if form.__class__.__name__ == 'AddJob' %}
+    <h1 style="color: #ffffff; margin-top: 10px;">Добавление проекта</h1>
+    {% elif form.__class__.__name__ == 'EditJob' %}
+    <h1 style="color: #ffffff; margin-top: 10px;">Изменение проекта</h1>
+    {% endif %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p style="color: #ffffff;">
+            {{ form.name.label }}<br>
+            {{ form.name(class="form-control") }}<br>
+            {% for error in form.name.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p style="color: #ffffff;">
+            {{ form.description.label }}<br>
+            {{ form.description(class="form-control") }}<br>
+            {% for error in form.description.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p style="color: #ffffff;">
+            {{ form.team_leaders.label }}<br>
+            {{ form.team_leaders(class="form-control") }}<br>
+            {% for error in form.team_leaders.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p style="color: #ffffff;">
+            {{ form.collaborators.label }}<br>
+            {{ form.collaborators(class="form-control") }}<br>
+            {% for error in form.collaborators.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </p>
+        <p style="color: #ffffff;">{{ form.is_finished() }} {{ form.is_finished.label }}</p>
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        <div  style="color: #ffffff;">{{ message }}</div>
+    </form>
+{% endblock %}

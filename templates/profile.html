@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="card" style="width: 40%; margin-top: 20px; box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+     0 10px 10px rgba(0,0,0,0.22);">
+        <div class="card-body">
+            <h5 class="card-title">Профиль {{ user.name }} {{ user.surname }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ user.department }}</h6>
+            <p class="card-text">Действующая почта: {{ user.email }}<br>
+                                 Телефон: {{ user.phone }}</p>
+            <a class="btn btn-info" href="/"> Главная страница </a>
+            <a class="btn btn-warning" href="/edit_profile">Редактрировать</a>
+            <a class="btn btn-danger" href="/logout"> Выйти </a>
+        </div>
+    </div>
+{% endblock %}
